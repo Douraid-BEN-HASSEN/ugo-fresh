@@ -14,7 +14,7 @@ class CResult:
     _ean = None
 
     # constructor
-    def __init__(self, pSeuil) -> None:
+    def __init__(self, pSeuil = 0.8) -> None:
         self._seuil = pSeuil
 
     def setSeuil(self, pSeuil) -> None:
