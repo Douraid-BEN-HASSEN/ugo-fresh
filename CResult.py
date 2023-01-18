@@ -65,6 +65,20 @@ class CResult:
             }
             return True
 
+    # méthode qui trouve le calibre
+    def parseCalibre(self, pPhrase) -> bool:
+        '''
+        
+        '''
+        return False
+
+    # méthode qui trouve la quantite
+    def parseQuantite(self, pPhrase) -> bool:
+        '''
+        trouver le calibre en 1er
+        '''
+        return False
+
     # méthode qui retourne les données sous forme d'un objet
     def toObject(self) -> object:
         result = {}
