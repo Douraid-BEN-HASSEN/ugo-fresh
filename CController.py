@@ -11,11 +11,13 @@ class CController:
             pSeuil = 0.8
         
         self._result.setSeuil(pSeuil)
-        
+
         # get ean
         self._result.parseEan(pPhrase)
 
         # get prix
         self._result.parsePrix(pPhrase)
 
+        # TODO: get autre info
+        
         return self._result.toObject()

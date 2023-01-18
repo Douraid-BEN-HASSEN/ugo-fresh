@@ -100,6 +100,7 @@ class CResult:
 
         return result
 
+    #TODO: méthode à faire
     # méthode qui retourne la similaritude entre 2 mot
     def similaritude(self, a, b) -> float:
         return 0.0
