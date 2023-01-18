@@ -17,8 +17,16 @@ async def order(phrase: str = Form(), seuil: str = Form()):
 
     return controller.traitementIA(phrase, seuil)
 
-def addInfo():
+@app.post("/addInfo/")
+async def addInfo(file: str = Form(), info: str = Form()):
     '''
     Ajout d'info dans les csv, par ex un nouveau fruit etc...
     '''
-    return 0.0
+    return { "response": "OK" }
+
+@app.post("/correct/")
+async def addInfo(file: str = Form(), info: str = Form()):
+    '''
+    Fonction de correction
+    '''
+    return { "response": "OK" }
