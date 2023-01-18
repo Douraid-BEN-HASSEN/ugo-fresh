@@ -3,17 +3,19 @@ from CResult import CResult
 class CController:
     _result = None
 
-    def __init__(self, pSeuil = 0.8) -> None:
+    def __init__(self) -> None:
+        self._result = CResult()
+
+    def traitementIA(self, pPhrase, pSeuil) -> object:
         if not str(pSeuil).isnumeric():
             pSeuil = 0.8
-
-        self._result = CResult(pSeuil)
-
-    def traitementIA(self, phrase) -> object:
+        
+        self._result.setSeuil(pSeuil)
+        
         # get ean
-        self._result.parseEan(phrase)
+        self._result.parseEan(pPhrase)
 
         # get prix
-        self._result.parsePrix(phrase)
+        self._result.parsePrix(pPhrase)
 
         return self._result.toObject()

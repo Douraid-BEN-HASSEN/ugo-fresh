@@ -3,6 +3,7 @@ from fastapi import FastAPI, Form
 from CController import CController
 
 app = FastAPI()
+controller = CController()
 
 @app.get("/")
 def read_root():
@@ -13,9 +14,8 @@ async def order(phrase: str = Form(), seuil: str = Form()):
     '''
     traitement IA
     '''
-    result = CController(seuil)
 
-    return result.traitementIA(phrase)
+    return controller.traitementIA(phrase, seuil)
 
 def addInfo():
     '''

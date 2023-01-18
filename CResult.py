@@ -17,6 +17,9 @@ class CResult:
     def __init__(self, pSeuil) -> None:
         self._seuil = pSeuil
 
+    def setSeuil(self, pSeuil) -> None:
+        self._seuil = pSeuil
+        
     # méthode qui trouve le prix dans une phrase
     def parsePrix(self, pPhrase) -> bool:
         n = 0
