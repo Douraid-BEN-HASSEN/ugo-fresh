@@ -20,6 +20,12 @@ class CController:
         # get prix
         self._result.parsePrix(pPhrase)
 
+        # get calibre
+        self._result.parseCalibre(pPhrase)
+
+        # get quantite
+        self._result.parseQuantite(pPhrase)
+        
         # TODO: get autre info
         
         return self._result.toObject()
