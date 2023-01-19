@@ -7,7 +7,9 @@ class CController:
         self._result = CResult()
 
     def traitementIA(self, pPhrase, pSeuil) -> object:
-        if not str(pSeuil).isnumeric():
+        try:
+            float(str(pSeuil))
+        except ValueError:
             pSeuil = 0.8
         
         self._result.setSeuil(pSeuil)

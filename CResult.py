@@ -16,59 +16,59 @@ class CResult:
 
     # constructor
     def __init__(self, pSeuil = 0.8) -> None:
-        self._seuil = pSeuil
+        self._seuil = float(pSeuil)
 
     def setSeuil(self, pSeuil) -> None:
-        self._seuil = pSeuil
-        
-    # méthode qui trouve le prix dans une phrase
+        self._seuil = float(pSeuil)
+
+    # méthode qui trouve le prix dans une phrase [OK]
     def parsePrix(self, pPhrase) -> bool:
         self._prix = None # reset prix self._prix
         n = 0
         while True and n < 3:
-            m = re.search('((\d+|\d+,\d+|\d+\.\d+|[0-9 ]+))(?:euro| euro|e| e|€| €)', pPhrase)
+            m = re.search('(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)(?:euro| euro|e| e|€| €)', pPhrase)
             if m:
                 # ex xxx€
                 try:
                     self._prix = {
-                        "value": float(m.group(2).replace(',', '.')),
-                        "confidence": 100
+                        "value": float(m.group(1).replace(',', '.')),
+                        "confidence": 99.9
                     }
                     return True
                 except ValueError:
-                    print('a')
+                    pass
             
             # ex €xxx
-            m = re.search('(?:€| €)(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)', pPhrase)
+            m = re.search('(?:€|€ )(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)', pPhrase)
             if m:
-                print(m)
                 try:
                     self._prix = {
                         "value": float(m.group(1).replace(',', '.')),
-                        "confidence": 100
+                        "confidence": 99.9
                     }
                     return True
                 except ValueError:
-                    print('b')
+                    pass
 
             # faute d'orthographe
             # trouver le mot "euro" mal écrit en faisant des similaritudes et le remplacer
             for word in pPhrase.split(' '):
-                if self.similaritude("euro", word) >= (self._seuil-(n*0.1)) or self.similaritude("euro", word) >= (self._seuil-(n*0.1)):
+                if self.similaritude("euro", word) >= (self._seuil-(n*0.1)) or self.similaritude("euros", word) >= (self._seuil-(n*0.1)) or self.similaritude("eur", word) >= (self._seuil-(n*0.1)):
                     pPhrase.replace(word, "euro")
                     return True
             n += 1
         
         return False
     
-    # méthode qui trouve le numero EAN dans une phrase
+    # méthode qui trouve le numero EAN dans une phrase [OK]
     def parseEan(self, pPhrase) -> bool:
+        self._ean = None # reset self._ean
         # get EAN
         m = re.search('(\d){13}', pPhrase)
         if m:
             self._ean = {
                 "value": m.group(0),
-                "condifdence": 100
+                "confidence": 99.9
             }
             return True
 
@@ -77,7 +77,10 @@ class CResult:
         '''
         # to lower
         # remplacer les accents (é -> e, à -> a)
+        '''
+        pPhrase = pPhrase.lower().replace("é", "e").replace("à", "a")
 
+        '''
         rechercher les unités :
         unité =
         - x unite
@@ -96,7 +99,11 @@ class CResult:
         - x pots
         - x botte
         - x bottes
+        '''
+        m = re.search('((\d+|\d+,\d+|\d+\.\d+|[0-9 ]+))(?:unite| unite|e| e|€| €)', pPhrase)
 
+
+        '''
         // check l'unité si mm ou cm
         millimiter =
         - x millimietre

@@ -14,7 +14,6 @@ async def order(phrase: str = Form(), seuil: str = Form()):
     '''
     traitement IA
     '''
-
     return controller.traitementIA(phrase, seuil)
 
 @app.post("/addInfo/")
