@@ -1,4 +1,5 @@
 import re
+from jarowinkler import jarowinkler_similarity
 
 class CResult:
     _seuil = None
@@ -22,35 +23,41 @@ class CResult:
         
     # méthode qui trouve le prix dans une phrase
     def parsePrix(self, pPhrase) -> bool:
+        self._prix = None # reset prix self._prix
         n = 0
         while True and n < 3:
             m = re.search('((\d+|\d+,\d+|\d+\.\d+|[0-9 ]+))(?:euro| euro|e| e|€| €)', pPhrase)
             if m:
                 # ex xxx€
-                if m.group(2).isnumeric() == True:
+                try:
                     self._prix = {
                         "value": float(m.group(2).replace(',', '.')),
                         "confidence": 100
                     }
                     return True
-                else:
-                    # ex €xxx
-                    m = re.search('(?:€| €)((\d+|\d+,\d+|\d+\.\d+|[0-9 ]+))', pPhrase)
-                    if m:
-                        if m.group(2).isnumeric() == True:
-                            self._prix = {
-                                "value": float(m.group(2).replace(',', '.')),
-                                "confidence": 100
-                            }
-                            return True
-                    else:
-                        # faute d'orthographe
-                        # trouver le mot "euro" mal écrit en faisant des similaritudes et le remplacer
-                        for word in pPhrase.split(' '):
-                            if self.similaritude("euro", word) >= (self._seuil-(n*0.1)) or self.similaritude("euro", word) >= (self._seuil-(n*0.1)):
-                                pPhrase.replace(word, "euro")
-                                return True
-                n += 1
+                except ValueError:
+                    print('a')
+            
+            # ex €xxx
+            m = re.search('(?:€| €)(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)', pPhrase)
+            if m:
+                print(m)
+                try:
+                    self._prix = {
+                        "value": float(m.group(1).replace(',', '.')),
+                        "confidence": 100
+                    }
+                    return True
+                except ValueError:
+                    print('b')
+
+            # faute d'orthographe
+            # trouver le mot "euro" mal écrit en faisant des similaritudes et le remplacer
+            for word in pPhrase.split(' '):
+                if self.similaritude("euro", word) >= (self._seuil-(n*0.1)) or self.similaritude("euro", word) >= (self._seuil-(n*0.1)):
+                    pPhrase.replace(word, "euro")
+                    return True
+            n += 1
         
         return False
     
@@ -68,7 +75,102 @@ class CResult:
     # méthode qui trouve le calibre
     def parseCalibre(self, pPhrase) -> bool:
         '''
+        # to lower
+        # remplacer les accents (é -> e, à -> a)
+
+        rechercher les unités :
+        unité =
+        - x unite
+        - x unites
+        - x element
+        - x elements
+        - douzaine
+        - demi douzaine
+        - x piece
+        - x pieces
+        - un demi
+        - x demi
+        - x fruit
+        - x fruits
+        - x pot
+        - x pots
+        - x botte
+        - x bottes
+
+        // check l'unité si mm ou cm
+        millimiter =
+        - x millimietre
+        - x millimietres
+        - x mm
+        centimeter =
+        - x centimetre
+        - x centimetres
+        - x cm
+        // ensuite voir si inf ou sup
+        inf_millimiter/inf_centimeter =
+        - inferieur a x
+        - inf a x
+        sup_millimiter/sup_centimeter =
+        - superieur a x
+        - sup a x
         
+        gram =
+        - x gramme
+        - x grammes
+        - x grame
+        - x grames
+        - x g
+
+        very_small =
+        - xs
+        - tres fin
+        - trs fin
+        - tres petit
+        - trs petit
+        small =
+        - s
+        - fin
+        - petit
+        medium =
+        - m
+        - moyen
+        - moy
+        - medium
+        - med
+        large =
+        - l
+        - grand
+        - grands
+        - large
+        - lg
+        very_large =
+        - xl
+        - tres grand
+        - trs grand
+        - tres grands
+        - trs grands
+        - tres large
+        - trs large
+        - tres larges
+        - trs larges
+        very_very_large =
+        - xxl
+        - tres tres grand
+        - trs tres grand
+        - tres trs grand
+        - trs trs grand
+        - tres tres grands
+        - trs tres grands
+        - tres trs grands
+        - trs trs grands
+        - tres tres large
+        - trs tres large
+        - tres trs large
+        - trs trs large
+        - tres tres larges
+        - trs tres larges
+        - tres trs larges
+        - trs trs larges
         '''
         return False
 
@@ -117,4 +219,4 @@ class CResult:
     #TODO: méthode à faire
     # méthode qui retourne la similaritude entre 2 mot
     def similaritude(self, a, b) -> float:
-        return 0.0
+        return jarowinkler_similarity(a,b)
