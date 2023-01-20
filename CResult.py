@@ -179,7 +179,7 @@ class CResult:
                 '''
                 if "inf" in str(m.group(1)):
                     if self._caliber is not None:
-                        if "millimiter" in self._caliber["value"]:
+                        if "millimiter" in self._caliber:
                             self._caliber["value"] = "inf_millimiter"
                         else:
                             self._caliber["value"] = "inf_centimeter"
@@ -189,7 +189,7 @@ class CResult:
                         self._caliber["confidence"] = 99.9
                 else:
                     if self._caliber is not None:
-                        if "millimiter" in self._caliber["value"]:
+                        if "millimiter" in self._caliber:
                             self._caliber["value"] = "sup_millimiter"
                         else:
                             self._caliber["value"] = "sup_centimeter"
