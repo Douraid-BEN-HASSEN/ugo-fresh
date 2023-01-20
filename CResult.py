@@ -26,6 +26,13 @@ class CResult:
     # méthode qui trouve le prix dans une phrase [OK]
     def parsePrix(self, pPhrase) -> bool:
         self._prix = {} # reset prix self._prix
+        ''' séparer les mots de nombres '''
+        wordTmp = re.split('(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)', pPhrase)
+        pPhrase = ""
+        for w in wordTmp:
+            pPhrase = pPhrase + " " + w
+        pPhrase = pPhrase.replace("  ", " ")
+
         n = 0
         while n < 3:
             m = re.search('(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)(?:euro| euro|e| e|€| €)', pPhrase)
@@ -54,7 +61,8 @@ class CResult:
 
             # faute d'orthographe
             # trouver le mot "euro" mal écrit en faisant des similaritudes et le remplacer
-            self._bestConfidenceVal = 0.0 # reset self._bestConfidenceVal            
+            self._bestConfidenceVal = 0.0 # reset self._bestConfidenceVal
+
             for word in pPhrase.split(' '):
                 if self.similaritude("euro", word) >= (self._seuil-(n*0.1)) or self.similaritude("euros", word) >= (self._seuil-(n*0.1)) or self.similaritude("eur", word) >= (self._seuil-(n*0.1)):
                     self._prix["confidence"] = self._bestConfidenceVal
@@ -85,7 +93,14 @@ class CResult:
         remplacer les accents (é -> e, à -> a)
         '''
         pPhrase = pPhrase.lower().replace("é", "e").replace("è", "e").replace("à", "a")
-        print(pPhrase)
+       
+        ''' séparer les mots de nombres '''
+        wordTmp = re.split('(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)', pPhrase)
+        pPhrase = ""
+        for w in wordTmp:
+            pPhrase = pPhrase + " " + w
+        pPhrase = pPhrase.replace("  ", " ")
+
         n = 0
         while n < 3:
             # partie 1 full regex
@@ -127,16 +142,23 @@ class CResult:
             - x centimetres
             - x cm
             '''
-            m = re.search('(millimietre|mm|centimetre|cm)(?:|s)', pPhrase)
+            m = re.search('(millimietre| mm|centimetre|cm)(?:|s)', pPhrase)
             if m:
+                print(pPhrase)
                 if str(m.group(1)) == "millimietre" or str(m.group(1)) == "mm":
                     if self._caliber is not None:
-                        self._caliber["value"] = self._caliber["value"] + "millimiter"
+                        if "value" in self._caliber:
+                            self._caliber["value"] = self._caliber["value"] + "millimiter"
+                        else:
+                            self._caliber["value"] = "millimiter"
                     else:
-                        self._caliber = self._caliber["value"] = "millimiter"
+                        self._caliber["value"] = "millimiter"
                 else:
                     if self._caliber is not None:
-                        self._caliber["value"] = self._caliber["value"] + "centimeter"
+                        if "value" in self._caliber:
+                            self._caliber["value"] = self._caliber["value"] + "centimeter"
+                        else:
+                            self._caliber["value"] = "centimeter"
                     else:
                         self._caliber["value"] = "centimeter"
                 if "confidence" not in self._caliber:
@@ -398,8 +420,8 @@ class CResult:
                     break
                 
             # check bigram
+            bigramFound = False
             if monogramFound == False:
-                bigramFound = False
                 self._bestConfidenceVal = 0.0
                 for word in bigram:
                     if self.similaritude("demi douzaine", word) >= (self._seuil-(n*0.1)) or self.similaritude("dmi douzaine", word) >= (self._seuil-(n*0.1)) or self.similaritude("dmi douzai", word) >= (self._seuil-(n*0.1)):
@@ -475,6 +497,14 @@ class CResult:
     # méthode qui trouve la quantite
     def parseQuantite(self, pPhrase) -> bool:
         self._quantite = {}
+
+        ''' séparer les mots de nombres '''
+        wordTmp = re.split('(\d+(?:[.,\s]\d{3})*(?:[.,]\d+)?)', pPhrase)
+        pPhrase = ""
+        for w in wordTmp:
+            pPhrase = pPhrase + " " + w
+        pPhrase = pPhrase.replace("  ", " ")
+
         n = 0
         while n < 3:
             # regex
