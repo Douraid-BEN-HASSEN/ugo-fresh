@@ -12,6 +12,8 @@ class CController:
         except ValueError:
             pSeuil = 0.8
         
+        pPhrase = pPhrase.replace("  ", " ")
+        
         self._result.setSeuil(pSeuil)
 
         # get ean

@@ -317,7 +317,7 @@ class CResult:
 
             # partie 2 : combinaison regex + similiratude
             
-            
+            print(pPhrase)
             # construction liste monogram & bigram & trigram
             monogram = pPhrase.split(' ')
             bigram = []
