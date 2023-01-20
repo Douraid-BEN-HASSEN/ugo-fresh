@@ -142,31 +142,31 @@ class CResult:
             - x centimetres
             - x cm
             '''
-            m = re.search('(millimietre| mm|centimetre|cm)(?:|s)', pPhrase)
+            m = re.search('(inferieur a|inf a|superieur a|sup a|millimietre| mm|centimetre|cm)(?:|s)', pPhrase)
             if m:
-                print(pPhrase)
-                if str(m.group(1)) == "millimietre" or str(m.group(1)) == "mm":
-                    if self._caliber is not None:
-                        if "value" in self._caliber:
-                            self._caliber["value"] = self._caliber["value"] + "millimiter"
+                if "inf" not in m.group(1) and "sup" not in m.group(1):
+                    if str(m.group(1)) == "millimietre" or str(m.group(1)) == "mm":
+                        if self._caliber is not None:
+                            if "value" in self._caliber:
+                                self._caliber["value"] = self._caliber["value"] + "millimiter"
+                            else:
+                                self._caliber["value"] = "millimiter"
                         else:
                             self._caliber["value"] = "millimiter"
                     else:
-                        self._caliber["value"] = "millimiter"
-                else:
-                    if self._caliber is not None:
-                        if "value" in self._caliber:
-                            self._caliber["value"] = self._caliber["value"] + "centimeter"
+                        if self._caliber is not None:
+                            if "value" in self._caliber:
+                                self._caliber["value"] = self._caliber["value"] + "centimeter"
+                            else:
+                                self._caliber["value"] = "centimeter"
                         else:
                             self._caliber["value"] = "centimeter"
-                    else:
-                        self._caliber["value"] = "centimeter"
-                if "confidence" not in self._caliber:
-                    self._caliber["confidence"] = 99.9
+                    if "confidence" not in self._caliber:
+                        self._caliber["confidence"] = 99.9
 
-                return True
+                    return True
 
-            m = re.search('(inferieur|inf|superieur|sup)', pPhrase)
+            m = re.search('(inferieur a|inf a|superieur a|sup a)', pPhrase)
             if m:
                 '''
                 // ensuite voir si inf ou sup
