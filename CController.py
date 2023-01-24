@@ -1,4 +1,5 @@
 from CResult import CResult
+import time
 
 class CController:
     _result = None
@@ -6,7 +7,7 @@ class CController:
     def __init__(self) -> None:
         self._result = CResult()
 
-    def traitementIA(self, pPhrase, pSeuil) -> object:
+    def traitementIA(self, pPhrase, pSeuil, pBench) -> object:
         try:
             float(str(pSeuil))
         except ValueError:
@@ -29,5 +30,8 @@ class CController:
         self._result.parseQuantite(pPhrase)
         
         # TODO: get autre info
-        
-        return self._result.toObject()
+        resultObj = self._result.toObject()
+        resultObj["benchmark"] = {
+            "value": time.time() - pBench
+        }
+        return resultObj

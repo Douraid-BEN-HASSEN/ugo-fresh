@@ -134,18 +134,18 @@ class CResult:
             '''
             // check l'unité si mm ou cm
             millimiter =
-            - x millimietre
-            - x millimietres
+            - x millimetre
+            - x millimetres
             - x mm
             centimeter =
             - x centimetre
             - x centimetres
             - x cm
             '''
-            m = re.search('(inferieur a|inf a|superieur a|sup a|millimietre| mm|centimetre|cm)(?:|s)', pPhrase)
+            m = re.search('(inferieur a|inf a|superieur a|sup a|millimetre| mm|centimetre|cm)(?:|s)', pPhrase)
             if m:
                 if "inf" not in m.group(1) and "sup" not in m.group(1):
-                    if str(m.group(1)) == "millimietre" or str(m.group(1)) == "mm":
+                    if str(m.group(1)) == "millimetre" or str(m.group(1)) == "mm":
                         if self._caliber is not None:
                             if "value" in self._caliber:
                                 self._caliber["value"] = self._caliber["value"] + "millimiter"
@@ -317,7 +317,6 @@ class CResult:
 
             # partie 2 : combinaison regex + similiratude
             
-            print(pPhrase)
             # construction liste monogram & bigram & trigram
             monogram = pPhrase.split(' ')
             bigram = []
@@ -373,8 +372,8 @@ class CResult:
                     pPhrase = pPhrase.replace(word, "botte")
                     self._caliber["confidence"] = self._bestConfidenceVal
                     monogramFound = True
-                elif self.similaritude("millimietre", word) >= (self._seuil-(n*0.1)) or self.similaritude("milimietre", word) >= (self._seuil-(n*0.1)) or self.similaritude("milimietr", word) >= (self._seuil-(n*0.1)) or self.similaritude("mm", word) >= (self._seuil-(n*0.1)):
-                    pPhrase = pPhrase.replace(word, "millimietre")
+                elif self.similaritude("millimetre", word) >= (self._seuil-(n*0.1)) or self.similaritude("milimietre", word) >= (self._seuil-(n*0.1)) or self.similaritude("milimietr", word) >= (self._seuil-(n*0.1)) or self.similaritude("mm", word) >= (self._seuil-(n*0.1)):
+                    pPhrase = pPhrase.replace(word, "millimetre")
                     self._caliber["confidence"] = self._bestConfidenceVal
                     monogramFound = True
                 elif self.similaritude("centimetre", word) >= (self._seuil-(n*0.1)) or self.similaritude("centmtre", word) >= (self._seuil-(n*0.1)) or self.similaritude("cent", word) >= (self._seuil-(n*0.1)) or self.similaritude("cm", word) >= (self._seuil-(n*0.1)):
